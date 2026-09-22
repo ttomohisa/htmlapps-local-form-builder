@@ -1,0 +1,26 @@
+{
+  "$schema": "./schemas/app-config.schema.json",
+  "name": "Local Form Builder",
+  "nameJa": "ローカルフォーム作成",
+  "slug": "local-form-builder",
+  "version": "1.0.0",
+  "description": "Build forms locally, export them as portable standalone HTML files, and manage responses on the device without a cloud form service.",
+  "descriptionJa": "フォームをブラウザー内で作成し、持ち運べる単一HTMLとして書き出し、回答も端末内で管理できる完全ローカルのフォームビルダーです。",
+  "defaultLanguage": "auto",
+  "repository": {
+    "owner": "ttomohisa",
+    "name": "htmlapps-local-form-builder"
+  },
+  "build": {
+    "output": "dist/index.html",
+    "blockRuntimeNetwork": true,
+    "selfExtract": {
+      "enabled": true,
+      "output": "dist/index.self-extract.html"
+    },
+    "sizeBudget": {
+      "readableWarningMb": 25,
+      "selfExtractWarningMb": 12
+    }
+  }
+}
