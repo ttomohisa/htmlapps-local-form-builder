@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Escape imported field identifiers in Builder and Preview HTML attributes so crafted schema IDs remain inert, including after draft resume. Preserve identifiers and response keys through standalone export.
+
+### Verified
+- Added an Edge browser regression covering malicious identifiers across all fourteen field types, preview validation, draft resume, and generated-form export.
+
 ## [1.0.0] - 2026-09-22
 
 ### Changed

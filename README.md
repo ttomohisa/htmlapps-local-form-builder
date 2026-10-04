@@ -61,7 +61,7 @@ Python, Node.js, and a local web server are not required for the standard Window
 6. In **Settings**, choose Normal or Continuous entry mode, edit the output filename, and export the standalone HTML.
 7. Open the generated `.html` file and save responses locally on that device.
 8. Use **Response history** to search, edit, duplicate, delete, print, export CSV, or save/restore a JSON backup.
-9. To revise an exported form later, use **Import from HTML** in the Builder. The imported HTML is not executed; only the embedded `local-form-schema` JSON is read.
+9. To revise an exported form later, use **Import from HTML** in the Builder. The imported HTML is not executed; only the embedded `local-form-schema` JSON is read. Imported field identifiers are treated as data when the Builder renders them.
 
 ### Field types
 

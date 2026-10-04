@@ -42,6 +42,8 @@ Applications created from this template may parse untrusted local files. Impleme
 - Make destructive transformations reversible where practical.
 - Never upload a selected file unless the product explicitly requires it and the user is clearly informed.
 
+Local Form Builder re-import reads only the inert `local-form-schema` JSON block. Its field identifiers, labels, and metadata remain untrusted after parsing and after local draft restoration. Every HTML attribute sink must escape identifiers; escaping must not change stored identifiers or exported response keys. The browser regression in `tests/imported-field-ids.cjs` covers this boundary.
+
 ## Dependency review
 
 Before adding or upgrading a package:
