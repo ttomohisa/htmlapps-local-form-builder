@@ -464,6 +464,7 @@ The template's canonical `outputFilename` behavior marker is now a real user-vis
 - A generated HTML file contains no external runtime dependency and has `connect-src 'none'`.
 - Generated HTML contains the form schema envelope with format/generator/language metadata.
 - User strings containing HTML or `</script>` cannot break out of the schema block or become executable markup.
+- Imported field IDs are untrusted data: escape them in Builder and Preview HTML attributes, including helper/error/label IDs and choice names. Draft resume and generated export preserve the original IDs and response keys without interpreting them as markup.
 - All fourteen field types render in generated HTML.
 - Initial/default values render correctly in generated HTML.
 - Required, text length, email, number min/max/step, date min/max, and checkbox-group selection-count validation work in generated HTML.
