@@ -19,7 +19,7 @@ GitHub Pages delivers the initial Builder HTML. Form design, preview, validation
 ## Features
 
 - **Build practical forms visually** — Add fourteen core field types for inspections, reception sheets, surveys, checklists, and interviews.
-- **Edit where you are looking** — Select a field and edit its question, type, choices, required state, defaults, and validation directly on the form card.
+- **Edit where you are looking** — Select a field and edit its question, type, choices, required state, defaults, and validation directly on the form card. Choice additions stay unique after deletion; blank/duplicate renames are restored when you leave the input. Choice edits retain valid selections and keep selection-count limits within the available choices.
 - **Place fields naturally** — Click to append, drag a new field into a specific position, or reorder existing fields with an explicit drag handle.
 - **Start faster with templates** — Use built-in Blank, Event reception, Site inspection, Survey, Checklist, and Interview sheet starters.
 - **Export a real standalone form** — Save the form as one `.html` file containing its UI, validation, local response workflow, history, CSV/JSON tools, and print styles.

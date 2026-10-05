@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Fixed
+- Use shared choice mutations for inline add/reorder/delete, generate unused names after deletion, and clamp checkbox-group selection bounds to the remaining choices.
+- Preserve valid defaults and sample answers across choice edits; validate committed names and clear stale field errors/export status.
 - Escape imported field identifiers in Builder and Preview HTML attributes so crafted schema IDs remain inert, including after draft resume. Preserve identifiers and response keys through standalone export.
 
 ### Verified
