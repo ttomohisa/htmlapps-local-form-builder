@@ -222,7 +222,8 @@ Preview is a validation sandbox, not response storage.
 
 - Initial Preview values come from each field's `defaultValue`.
 - Values entered in Preview are kept only in page memory.
-- **Reset input** restores Preview to current default values.
+- Optional radio fields expose **Clear selection** in Preview and generated forms. It records an explicit empty answer, clears only that field's error, refreshes the error summary, and returns focus to its first radio control. It preserves sibling answers/errors and the authored schema/defaults. Required radios and other field types do not expose this action.
+- **Reset input** restores Preview to current default values, including after clearing a radio selection.
 - Schema edits invalidate affected Preview values so stale choice/default data is not carried forward.
 - Switching languages must not translate user-authored form text.
 - Switching Edit / Preview must not mutate the schema.
@@ -469,7 +470,7 @@ The template's canonical `outputFilename` behavior marker is now a real user-vis
 - Initial/default values render correctly in generated HTML.
 - Required, text length, email, number min/max/step, date min/max, and checkbox-group selection-count validation work in generated HTML.
 - Invalid generated-form controls show localized errors and the first invalid control receives focus.
-- A valid generated-form save creates or updates a local response record.
+- A valid generated-form save creates or updates a local response record. Only one save may be in flight: capture its answers/edit identity, disable input/reset/history actions while saving, and ignore overlapping interactions. Storage failure keeps answers/edit identity, shows a localized retryable error, and releases controls. A committed write still completes if history refresh fails, avoiding a misleading save-failure retry. Intentional later saves, including Continuous entry, remain available.
 - Storage capability is tested with a real write/read/delete round trip.
 - IndexedDB is preferred, then localStorage, then memory-only fallback with a visible warning.
 - Response history, detail, edit, duplicate, individual delete, and delete-all work without external communication.
@@ -520,3 +521,4 @@ Future work should be driven by real usage rather than delaying the stable relea
 - GPS fields
 - Response-included standalone HTML export
 - Optional passphrase encryption for local response data
+

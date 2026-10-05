@@ -57,7 +57,7 @@ Python, Node.js, and a local web server are not required for the standard Window
 2. Add fields from **Add field** or the left field palette. On desktop, you can drag a field type directly to the position you want.
 3. Select a field on the canvas to edit it in place. Choice fields expose their options directly below the question.
 4. Open **Advanced settings** for helper text, placeholders, initial values, and applicable validation rules.
-5. Switch to **Preview** to try the form with real controls. Use **Check input** to run the same validation model used by exported forms.
+5. Switch to **Preview** to try the form with real controls. Use **Check input** to run the same validation model used by exported forms. Optional radio questions have **Clear selection** to leave them unanswered; **Reset input** still restores defaults.
 6. In **Settings**, choose Normal or Continuous entry mode, edit the output filename, and export the standalone HTML.
 7. Open the generated `.html` file and save responses locally on that device.
 8. Use **Response history** to search, edit, duplicate, delete, print, export CSV, or save/restore a JSON backup.
@@ -160,6 +160,8 @@ dist/
 └─ .nojekyll
 ```
 
+While a generated form is saving, input and conflicting actions are temporarily disabled to prevent duplicate responses. If saving fails, your answers remain available for retry.
+
 ## Privacy and runtime network protection
 
 The Builder and generated forms are designed for fully local processing:
@@ -198,3 +200,4 @@ Bug reports and feature proposals are welcome through GitHub Issues. See [CONTRI
 Copyright © 2026 ttomohisa
 
 Licensed under the [MIT License](LICENSE).
+
