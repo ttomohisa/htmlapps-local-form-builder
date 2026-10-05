@@ -115,7 +115,7 @@ Default values:
 - `checkbox`: boolean.
 - text-like/date/time/number fields: string representation suitable for the HTML control.
 
-Renaming or deleting a choice must not leave a selected default pointing to a removed value.
+Renaming or deleting a choice must not leave a selected default pointing to a removed value. Inline and inspector actions share the same choice mutations. Added choices use an unused localized name, including after deletion. Names commit on change/blur; a blank or duplicate name is restored to the previous value with a localized notice. A valid trimmed rename carries its default and sample answer to the new value. Adding/reordering retains valid selections; deletion removes only deleted selections and clamps non-null selection-count bounds. Choice edits clear the affected preview error and obsolete export status without changing sibling answers.
 
 ### Display fields
 
