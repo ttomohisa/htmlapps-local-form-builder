@@ -1,3 +1,9 @@
+# Form interaction regressions
+
+Run `node --test tests/form-interactions.cjs tests/choice-editing.cjs` against source, or set `FORM_BUILDER_HTML` to the root/readable/decoded self-extract HTML. The tests execute actual Preview handlers and the full generated runtime with synthetic DOM/storage boundaries. They cover optional radio clearing, bilingual labels, escaped IDs, defaults/reset, sibling state/error summaries/focus, concurrent and failed saves, edit context, retry, and Continuous entry. The IndexedDB adapter tests exercise actual `putResponse` with deferred requests and transaction completion/abort; they do not use real IndexedDB or a browser.
+
+Browser acceptance: in Preview and an exported form, choose then clear an optional radio with a default; verify keyboard focus, other answers, validation, Reset input, and a saved empty response. Repeat in both languages, Normal/Continuous modes, editing an existing response, desktop and narrow layouts. Rapidly press Save twice, try Reset/history during the pending save, and verify one stored response. Test storage failure/retry and direct file opening separately.
+
 # Choice editing regressions
 
 Run the dependency-free production-handler tests:
@@ -26,3 +32,4 @@ node --test tests/imported-field-ids.cjs
 Omit `PLAYWRIGHT_MODULE` when Playwright is resolvable normally. `FORM_BUILDER_HTML` defaults to `dist/index.html`; `PLAYWRIGHT_CHANNEL` defaults to `msedge`. Without `FORM_BUILDER_DIRECT_FILE`, the Builder is served on loopback. Exported forms are always opened directly with `file://`.
 
 The synthetic imported schema contains an attribute-breaking field ID in all fourteen field types. The test checks inert import and draft resume, original IDs in edit/preview attributes, preview validation, standalone export, response save, and preservation of the exact response key in JSON backup. It blocks off-origin HTTP requests and fails on page errors. It uses a temporary directory and an isolated browser context.
+

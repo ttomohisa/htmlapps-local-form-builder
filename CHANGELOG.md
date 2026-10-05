@@ -2,12 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+- Clear optional radio selections in Preview and generated forms without changing authored defaults or sibling answers.
+
 ### Fixed
+- Prevent overlapping generated-form saves, preserve answers/edit context on storage failure, and allow deliberate retries and subsequent Continuous submissions.
 - Use shared choice mutations for inline add/reorder/delete, generate unused names after deletion, and clamp checkbox-group selection bounds to the remaining choices.
 - Preserve valid defaults and sample answers across choice edits; validate committed names and clear stale field errors/export status.
 - Escape imported field identifiers in Builder and Preview HTML attributes so crafted schema IDs remain inert, including after draft resume. Preserve identifiers and response keys through standalone export.
 
 ### Verified
+- Add dependency-free production-handler regressions for optional clearing, localized errors, escaped IDs, deferred save boundaries, and repeated/retry flows.
 - Added an Edge browser regression covering malicious identifiers across all fourteen field types, preview validation, draft resume, and generated-form export.
 
 ## [1.0.0] - 2026-09-22
@@ -189,3 +194,4 @@ Generated form HTML, validation execution, response storage/history, CSV / JSON 
 - Added Local Form Builder favicon / brand icon while preserving the template's canonical single-icon build contract.
 - Updated product spec, help, README files, and repository metadata for v0.1.0.
 - Kept runtime networking blocked with `connect-src 'none'` and introduced no third-party runtime dependency.
+
