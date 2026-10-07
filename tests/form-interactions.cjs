@@ -26,18 +26,31 @@ function dom() {
 function builder(language = 'en', required = false) {
   const d = dom();
   const state = { canvasMode: 'preview', previewWidth: 'desktop', form: { title: 'Synthetic', description: '', formId: 'synthetic', schemaVersion: 1, formVersion: 1, fields: fields(required) }, previewValues: { notes: 'Keep' }, previewErrors: { [fieldId]: 'Old choice error', notes: 'Old notes error' } };
-  const context = vm.createContext({ state, language, $: d.element, CSS: { escape: String }, document: { querySelector: d.element }, requestAnimationFrame: fn => fn(), announce() {}, renderSchema() {}, AppToast: { show() {} } });
+  const storageWrites = [], announcements = [];
+  const context = vm.createContext({ state, language, APP_CONFIG: { name: 'Local Form Builder', nameJa: 'ローカルフォーム作成' }, $: d.element, CSS: { escape: String },
+    document: { documentElement: {}, querySelector: d.element, querySelectorAll: () => [], createElement: () => ({ checkValidity: () => false }) },
+    requestAnimationFrame: fn => fn(), matchMedia: () => ({ matches: true }), announce: message => announcements.push(message), renderSchema() {},
+    renderPalette() {}, renderQuickAddMenu() {}, renderInspector() {}, draftStatusState: 'saved', storageKeys: { language: 'language' },
+    writeStorage: (key, value) => storageWrites.push([key, value]), AppToast: { show() {} } });
   vm.runInContext(source.slice(source.indexOf('      const translations ='), source.indexOf('      const $ =')), context);
-  const wanted = ['t','fieldById','previewValueFor','renderRuntimeField','renderRuntimeCanvas','renderCanvas','normalizedOptions','supportsTextLength','escapeHtml','formatMessage','resetPreviewValues','clearPreviewRadio'];
+  const wanted = ['t','fieldById','previewValueFor','renderRuntimeField','renderRuntimeCanvas','renderCanvas','normalizedOptions','supportsTextLength','escapeHtml','formatMessage','resetPreviewValues','clearPreviewRadio','isInputType','validateFieldValue','validatePreview','applyLanguage','renderAll','setDraftStatus','refreshPreviewErrorLanguage'];
   for (const match of source.matchAll(/^      function (\w+)\([^\n]*(?:\n[\s\S]*?^      \}|\{[^\n]*\})/gm)) if (wanted.includes(match[1])) vm.runInContext(match[0], context);
   // Evaluate the actual delegated click wiring rather than calling a test-only helper.
   const click = source.match(/      \$\('#fieldList'\)\.addEventListener\('click', event => \{\n        const clearButton = [\s\S]*?^      \}\);/m);
   if (click) vm.runInContext(click[0], context);
+  vm.runInContext(source.match(/      \$\('#languageButton'\)\.addEventListener\('click', \(\) => \{[\s\S]*?^      \}\);/m)[0], context);
+  for (const id of ['resetPreviewButton', 'validatePreviewButton']) vm.runInContext(source.match(new RegExp("      \\$\\('#" + id + "'\\)\\.addEventListener[^\\n]+"))[0], context);
+  for (const name of ['input', 'change']) vm.runInContext(source.match(new RegExp("      \\$\\('#fieldList'\\)\\.addEventListener\\('" + name + "', event => \\{\\n        if \\(state.canvasMode !== 'preview'\\)[\\s\\S]*?^      \\}\\);", 'm'))[0], context);
+  function press(id) { for (const handler of d.handlers['#' + id + ':click'] || []) handler(); }
+  function input(id, value) {
+    const control = { dataset: { fieldId: id }, value };
+    for (const handler of d.handlers['#fieldList:input'] || []) handler({ target: { closest: () => control } });
+  }
   function clear(id = fieldId) {
     const button = { dataset: { clearPreviewRadio: id } };
     for (const h of d.handlers['#fieldList:click'] || []) h({ target: { closest: selector => selector === '[data-clear-preview-radio]' ? button : null } });
   }
-  return { ...d, state, context, clear, html: f => context.renderRuntimeField(f || state.form.fields[0]) };
+  return { ...d, state, context, clear, press, input, storageWrites, announcements, html: f => context.renderRuntimeField(f || state.form.fields[0]) };
 }
 function generated(language = 'en', { required = false, edit = false, mode = 'normal', id = fieldId } = {}) {
   const d = dom(), pending = [], writes = [], completions = [], timers = [];
@@ -201,3 +214,94 @@ test('generated print CSS excludes interactive clear buttons from blank and save
   const print=css.slice(css.indexOf('@media print'));
   assert.match(print, /\.clear-selection[^{}]*\{display:none!important\}/);
 });
+
+// Use real validation and language clicks. The email probe is the browser-only
+// validity boundary; every fixture here deliberately supplies an invalid email.
+const validationCases = [
+  ['required', { type: 'text', required: true }, '', '入力してください。', 'Enter a value.'],
+  ['requiredChoice', { type: 'radio', required: true }, '', '選択してください。', 'Select an option.'],
+  ['email', { type: 'email' }, 'invalid email', 'メールアドレスの形式を確認してください。', 'Enter a valid email address.'],
+  ['minLength', { type: 'text', minLength: 5 }, 'ab', '5文字以上で入力してください。', 'Enter at least 5 characters.'],
+  ['maxLength', { type: 'textarea', maxLength: 2 }, 'abc', '2文字以内で入力してください。', 'Enter no more than 2 characters.'],
+  ['number', { type: 'number' }, 'invalid', '数値を入力してください。', 'Enter a number.'],
+  ['minValue', { type: 'number', min: -2.5 }, '-3.5', '-2.5以上で入力してください。', 'Enter -2.5 or greater.'],
+  ['maxValue', { type: 'number', max: 10.5 }, '11', '10.5以下で入力してください。', 'Enter 10.5 or less.'],
+  ['step', { type: 'number', step: 2 }, '3', '指定された刻み幅で入力してください。', 'Enter a value matching the configured step.'],
+  ['minDate', { type: 'date', minDate: '2026-10-07' }, '2026-10-06', '2026-10-07以降の日付を選んでください。', 'Choose 2026-10-07 or later.'],
+  ['maxDate', { type: 'date', maxDate: '2026-10-07' }, '2026-10-08', '2026-10-07以前の日付を選んでください。', 'Choose 2026-10-07 or earlier.'],
+  ['minSelections', { type: 'checkboxGroup', minSelections: 2 }, ['One'], '2個以上選択してください。', 'Select at least 2.'],
+  ['maxSelections', { type: 'checkboxGroup', maxSelections: 1 }, ['One', 'Two'], '1個以内で選択してください。', 'Select no more than 1.']
+];
+for (const initial of ['ja', 'en']) {
+  test(`${initial}: language clicks refresh every cached Preview error without revalidating edited answers`, () => {
+    const h = builder(initial);
+    h.state.form.fields = validationCases.map(([id, properties]) => ({ id, label: 'Authored ' + id, options: ['One', 'Two'], ...properties }));
+    h.state.form.fields.push({ id: 'previouslyValid', type: 'text', label: 'Authored sibling', required: true });
+    h.state.previewValues = Object.fromEntries(validationCases.map(([id, , value]) => [id, plain(value)]));
+    h.state.previewValues.previouslyValid = 'Valid before checking';
+    h.state.outputFilenameCustomized = true;
+    h.element('#outputFilename').value = 'my-custom-form';
+    h.element('#exportStatus').textContent = 'Previous export status';
+    h.press('validatePreviewButton');
+    assert.equal(Object.keys(h.state.previewErrors).length, validationCases.length);
+    const expectedErrors = language => Object.fromEntries(validationCases.map(([id, , , ja, en]) => [id, language === 'ja' ? ja : en]));
+    assert.deepEqual(plain(h.state.previewErrors), expectedErrors(initial));
+    // Typing does not change the last validation result. A UI language change
+    // must not silently clear a corrected field or reveal a newly invalid one.
+    h.input('required', 'Now valid');
+    h.input('previouslyValid', '');
+    const before = plain(h.state), focus = [...h.focus], announcements = [...h.announcements];
+    for (const language of [initial === 'ja' ? 'en' : 'ja', initial]) {
+      h.press('languageButton');
+      assert.deepEqual(plain(h.state.previewErrors), expectedErrors(language));
+      for (const [id, message] of Object.entries(expectedErrors(language))) assert.ok(h.html(h.state.form.fields.find(field => field.id === id)).includes(message));
+      assert.equal(h.element('#previewValidationSummary').textContent, language === 'ja' ? '13件の入力を確認してください。' : 'Check 13 field(s).');
+      assert.equal(h.element('#previewValidationSummary').hidden, false);
+      assert.deepEqual(plain({ ...h.state, previewErrors: before.previewErrors }), before);
+      assert.equal(h.context.draftStatusState, 'saved');
+      assert.equal(h.element('#outputFilename').value, 'my-custom-form');
+      assert.equal(h.element('#exportStatus').textContent, 'Previous export status');
+      assert.deepEqual(h.focus, focus);
+      assert.deepEqual(h.announcements, announcements);
+    }
+    assert.deepEqual(h.storageWrites, [['language', initial === 'ja' ? 'en' : 'ja'], ['language', initial]]);
+  });
+  test(`${initial}: language clicks leave untouched and reset Preview validation empty`, () => {
+    const h = builder(initial);
+    h.state.previewErrors = {};
+    h.state.previewValues.notes = '';
+    for (let i = 0; i < 2; i++) {
+      h.press('languageButton');
+      assert.deepEqual(plain(h.state.previewErrors), {});
+      assert.equal(h.element('#previewValidationSummary').hidden, true);
+      assert.doesNotMatch(h.html(h.state.form.fields[1]), /aria-invalid|runtime-error/);
+    }
+    h.press('validatePreviewButton');
+    assert.ok(h.state.previewErrors.notes);
+    h.press('resetPreviewButton');
+    h.press('languageButton');
+    assert.deepEqual(plain(h.state.previewErrors), {});
+    assert.equal(h.element('#previewValidationSummary').hidden, true);
+    assert.equal(h.context.previewValueFor(h.state.form.fields[0]), 'Two');
+  });
+  test(`${initial}: translated Preview errors survive optional clearing locally and reset restores defaults`, () => {
+    const h = builder(initial), schema = plain(h.state.form);
+    h.state.previewValues.notes = '';
+    h.press('validatePreviewButton');
+    h.press('languageButton');
+    const target = initial === 'ja' ? 'Enter a value.' : '入力してください。';
+    assert.equal(h.state.previewErrors.notes, target);
+    h.clear();
+    assert.equal(h.context.previewValueFor(h.state.form.fields[0]), '');
+    assert.deepEqual(plain(h.state.previewErrors), { notes: target });
+    assert.deepEqual(plain(h.state.form), schema);
+    h.press('languageButton');
+    assert.equal(h.context.previewValueFor(h.state.form.fields[0]), '');
+    assert.equal(h.state.previewErrors.notes, initial === 'ja' ? '入力してください。' : 'Enter a value.');
+    h.press('resetPreviewButton');
+    h.press('languageButton');
+    assert.deepEqual(plain(h.state.previewErrors), {});
+    assert.equal(h.context.previewValueFor(h.state.form.fields[0]), 'Two');
+    assert.equal(h.context.previewValueFor(h.state.form.fields[1]), '');
+  });
+}

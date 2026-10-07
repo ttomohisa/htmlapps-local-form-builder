@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1] - 2026-10-07
+
+### Fixed
+- Standardize the header language targets to EN / JA with localized target titles and accessible names.
+- Refresh visible Preview validation messages when changing UI language, retaining the last validation result, answers, schema, and output filename.
+- Keep the header and build information aligned with the canonical patch version, preserving Help accessibility and existing app behavior.
+
 ## [Unreleased]
 
 ### Added

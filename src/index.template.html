@@ -581,12 +581,12 @@
       <div class="brand">
         <div class="brand-mark" aria-hidden="true"><img id="appBrandIcon" src="__APP_ICON_DATA_URI__" alt=""></div>
         <div class="brand-copy">
-          <p class="brand-name"><span id="brandName">Local Form Builder</span><span class="version-badge" id="versionBadge">v1.0.0</span></p>
+          <p class="brand-name"><span id="brandName">Local Form Builder</span><span class="version-badge" id="versionBadge">v1.0.1</span></p>
           <p class="brand-meta" data-i18n="brandMeta">Build forms · Export as HTML</p>
         </div>
       </div>
       <div class="header-actions">
-        <button class="language-button" id="languageButton" type="button" aria-label="Switch language">EN</button>
+        <button class="language-button" id="languageButton" type="button" title="英語に切り替え" aria-label="英語に切り替え">EN</button>
         <button class="icon-button header-icon-button" id="helpButton" type="button" data-i18n-title="helpTitle" data-i18n-aria-label="helpTitle" title="使い方と注意事項" aria-label="使い方と注意事項">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 1 1 3.72 1.9c-.92.67-1.52 1.12-1.52 2.1"/><path d="M12 17h.01"/></svg>
         </button>
@@ -605,7 +605,7 @@
       </div>
     </section>
 
-    <!-- APP:BEGIN Local Form Builder v1.0.0 workspace. -->
+    <!-- APP:BEGIN Local Form Builder v1.0.1 workspace. -->
     <section class="builder-grid" aria-label="Local Form Builder workspace">
       <section class="panel palette-panel app-mobile-page" id="fieldsPage" aria-labelledby="fieldsTitle">
         <div class="panel-head">
@@ -902,13 +902,14 @@
       </button>
     </div>
     <div class="dialog-body">
-      <!-- APP:HELP:BEGIN Local Form Builder v1.0.0 help. -->
+      <!-- APP:HELP:BEGIN Local Form Builder v1.0.1 help. -->
       <h3 data-i18n="helpBasicsTitle">基本操作</h3>
       <ol>
         <li data-i18n="helpStep1">「項目を追加」からクリックで末尾へ追加するか、項目をフォーム内の好きな位置へドラッグして挿入します。</li>
         <li data-i18n="helpStep2">フォーム上の項目を選択すると、その場で質問文・種類・選択肢・必須設定を編集できます。初期値や入力チェックは「詳細設定」から編集します。</li>
         <li data-i18n="helpStep3">「プレビュー」で入力チェックを確認し、「HTMLを書き出す」から独立して動くフォームHTMLを保存できます。項目の複製・並べ替え・削除Undoも利用できます。</li>
         <li data-i18n="helpChoiceEditing">選択肢名は入力を確定すると反映されます。空欄や重複は元に戻り、削除時は選択数の上限・下限も調整します。有効な初期値・プレビュー回答は維持します。</li>
+        <li data-i18n="helpPreviewLanguage">言語を切り替えると表示中の入力エラーも翻訳されます。回答はそのまま残り、再チェックは行いません。</li>
         <li data-i18n="helpOptionalRadio">必須でないラジオボタンは「選択を解除」で未選択に戻せます。保存中は操作を待ち、保存に失敗した場合は残っている入力内容で再試行できます。</li>
       </ol>
       <h3 data-i18n="helpMobileTitle">スマートフォン</h3>
@@ -1011,6 +1012,7 @@
 
       const translations = {
         ja: {
+          helpPreviewLanguage: '言語を切り替えると表示中の入力エラーも翻訳されます。回答はそのまま残り、再チェックは行いません。',
           helpOptionalRadio: '必須でないラジオボタンは「選択を解除」で未選択に戻せます。保存中は操作を待ち、保存に失敗した場合は残っている入力内容で再試行できます。',
           helpChoiceEditing: '選択肢名は入力を確定すると反映されます。空欄や重複は元に戻り、削除時は選択数の上限・下限も調整します。有効な初期値・プレビュー回答は維持します。',
           choiceNameInvalid: '選択肢は空欄や重複にできません。元の名前に戻しました。',
@@ -1035,6 +1037,7 @@
           confirmTitle: '確認', confirmAction: '実行する', cancel: 'キャンセル'
         },
         en: {
+          helpPreviewLanguage: 'Changing the UI language also translates visible input errors, keeping your answers and the last validation result.',
           helpOptionalRadio: 'Use Clear selection to leave an optional radio question unanswered in Preview or the exported form. Wait while a response is saving. If saving fails, your input remains available to retry.',
           helpChoiceEditing: 'Choice names commit when you leave the input. Blank or duplicate names are restored. Deleting a choice adjusts selection limits and keeps other valid selections.',
           choiceNameInvalid: 'Choices must be non-empty and unique. The original name was restored.',
@@ -2244,6 +2247,24 @@
         }
         return '';
       }
+      function refreshPreviewErrorLanguage(previousLanguage) {
+        // Translate the last check, not current answers: typing does not revalidate.
+        const messages = Object.entries(translations[previousLanguage] || translations.en).filter(([key]) => key.startsWith('error'));
+        for (const [id, error] of Object.entries(state.previewErrors)) {
+          for (const [key, template] of messages) {
+            const [prefix, suffix] = template.split('{value}');
+            if (suffix === undefined) {
+              if (error !== template) continue;
+              state.previewErrors[id] = t(key);
+            } else {
+              if (!error.startsWith(prefix) || !error.endsWith(suffix) || error.length < prefix.length + suffix.length) continue;
+              const value = error.slice(prefix.length, error.length - suffix.length);
+              state.previewErrors[id] = formatMessage(t(key), { value });
+            }
+            break;
+          }
+        }
+      }
       function validatePreview() {
         const errors = {};
         for (const field of state.form.fields) {
@@ -2387,8 +2408,9 @@
         document.querySelectorAll('[data-i18n]').forEach(element => { element.textContent = t(element.dataset.i18n); });
         document.querySelectorAll('[data-i18n-title]').forEach(element => { element.title = t(element.dataset.i18nTitle); });
         document.querySelectorAll('[data-i18n-aria-label]').forEach(element => { element.setAttribute('aria-label', t(element.dataset.i18nAriaLabel)); });
-        $('#languageButton').textContent = language === 'ja' ? 'EN' : '日本語';
+        $('#languageButton').textContent = language === 'ja' ? 'EN' : 'JA';
         $('#languageButton').setAttribute('aria-label', language === 'ja' ? '英語に切り替え' : 'Switch to Japanese');
+        $('#languageButton').title = language === 'ja' ? '英語に切り替え' : 'Switch to Japanese';
         document.title = language === 'ja' ? APP_CONFIG.nameJa : APP_CONFIG.name;
         $('#brandName').textContent = language === 'ja' ? APP_CONFIG.nameJa : APP_CONFIG.name;
         $('#footerName').textContent = language === 'ja' ? APP_CONFIG.nameJa : APP_CONFIG.name;
@@ -2671,7 +2693,9 @@
       document.addEventListener('keydown', event => { if (event.key === 'Escape' && !$('#quickAddPanel').hidden) setQuickAddOpen(false); });
 
       $('#languageButton').addEventListener('click', () => {
+        const previousLanguage = language;
         language = language === 'ja' ? 'en' : 'ja';
+        refreshPreviewErrorLanguage(previousLanguage);
         writeStorage(storageKeys.language, language);
         applyLanguage();
       });
