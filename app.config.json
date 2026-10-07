@@ -3,7 +3,7 @@
   "name": "Local Form Builder",
   "nameJa": "ローカルフォーム作成",
   "slug": "local-form-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Build forms locally, export them as portable standalone HTML files, and manage responses on the device without a cloud form service.",
   "descriptionJa": "フォームをブラウザー内で作成し、持ち運べる単一HTMLとして書き出し、回答も端末内で管理できる完全ローカルのフォームビルダーです。",
   "defaultLanguage": "auto",

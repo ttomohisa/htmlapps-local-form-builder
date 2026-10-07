@@ -5,7 +5,7 @@
 - **Name:** Local Form Builder
 - **Japanese name:** ローカルフォーム作成
 - **Slug:** `local-form-builder`
-- **Current version:** `1.0.0`
+- **Current version:** `1.0.1`
 - **One-sentence purpose:** Build a local-first form in the browser, configure validation, preview the real controls, and export the form itself as a portable standalone HTML file.
 - **Primary users:** People creating event sheets, inspection forms, surveys, checklists, and interview sheets for use on PCs, phones, or tablets without a cloud form service.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
@@ -225,7 +225,7 @@ Preview is a validation sandbox, not response storage.
 - Optional radio fields expose **Clear selection** in Preview and generated forms. It records an explicit empty answer, clears only that field's error, refreshes the error summary, and returns focus to its first radio control. It preserves sibling answers/errors and the authored schema/defaults. Required radios and other field types do not expose this action.
 - **Reset input** restores Preview to current default values, including after clearing a radio selection.
 - Schema edits invalidate affected Preview values so stale choice/default data is not carried forward.
-- Switching languages must not translate user-authored form text.
+- Switching languages must not translate user-authored form text. Visible Preview errors switch language without revalidating: preserve the last checked error set and parameters, even if answers have since changed. Do not expose errors on untouched or reset forms. Preserve sample answers, authored schema, draft status, and the customized output filename.
 - Switching Edit / Preview must not mutate the schema.
 
 ## 11. Validation error UI
@@ -522,3 +522,9 @@ Future work should be driven by real usage rather than delaying the stable relea
 - Response-included standalone HTML export
 - Optional passphrase encryption for local response data
 
+
+## v1.0.1 header contract
+
+- The language button shows its target as `EN` in Japanese and `JA` in English, with matching localized title and accessible name: `英語に切り替え` / `Switch to Japanese`.
+- Header version is `v` plus the canonical `app.config.json` version; Help controls retain localized titles and accessible names.
+- Language changes preserve authored content and existing output state. Privacy remains `完全ローカル処理` / `Fully local processing`.

@@ -33,3 +33,7 @@ Omit `PLAYWRIGHT_MODULE` when Playwright is resolvable normally. `FORM_BUILDER_H
 
 The synthetic imported schema contains an attribute-breaking field ID in all fourteen field types. The test checks inert import and draft resume, original IDs in edit/preview attributes, preview validation, standalone export, response save, and preservation of the exact response key in JSON backup. It blocks off-origin HTTP requests and fails on page errors. It uses a temporary directory and an isolated browser context.
 
+
+# Preview language regression
+
+`node --test tests/form-interactions.cjs tests/header-language.cjs` also executes real validation, language, input, optional-clear, and reset handlers. It checks all thirteen validation message types in both language directions, including interpolated number/date limits; retains the last checked result when answers change; leaves untouched/reset forms error-free; and preserves authored schema, sample answers, output filename/customization, draft status, and focus. As above, repeat with `FORM_BUILDER_HTML` for readable, root, and decoded self-extract artifacts. Browser-native email validity is a synthetic boundary in the Node harness.
