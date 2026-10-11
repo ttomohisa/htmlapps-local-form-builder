@@ -235,7 +235,7 @@ if ($ForceDownload) { $buildArguments.ForceDownload = $true }
 
 $node = Get-Command node -ErrorAction SilentlyContinue
 if (-not $node) { throw "Node.js is required for header and Preview regressions." }
-& $node.Source --test (Join-Path $Root "tests\header-language.cjs") (Join-Path $Root "tests\form-interactions.cjs")
+& $node.Source --test (Join-Path $Root "tests\header-language.cjs") (Join-Path $Root "tests\form-interactions.cjs") (Join-Path $Root "tests\overlay-layout.cjs")
 if ($LASTEXITCODE -ne 0) { throw "Header and Preview language regressions failed." }
 
 Write-Host "[OK] Repository check passed." -ForegroundColor Green
