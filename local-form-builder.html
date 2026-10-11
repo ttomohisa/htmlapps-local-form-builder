@@ -516,8 +516,8 @@
       .inline-advanced-grid { grid-template-columns: 1fr; }
       .inline-editor-footer { flex-wrap: wrap; }
       .inline-required-toggle { margin-left: auto; }
-      /* Keep the picker inside the space above the persistent navigation. */
-      .quick-add-panel { position: fixed; z-index: 56; left: 10px; right: 10px; bottom: calc(78px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; max-height: calc(100dvh - var(--header-height) - 94px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow: hidden; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,.16); }
+      /* Use the safe viewport top gap, not the global header height, above the persistent navigation. */
+      .quick-add-panel { position: fixed; z-index: 56; left: 10px; right: 10px; bottom: calc(78px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; max-height: calc(100dvh - 94px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow: hidden; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,.16); }
       .quick-add-head { flex: 0 0 auto; }
       .quick-add-scroll { min-height: 0; flex: 1 1 auto; max-height: min(50dvh, 360px); }
       .quick-add-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -942,7 +942,7 @@
       'use strict';
 
       const APP_CONFIG = {"$schema":"./schemas/app-config.schema.json","name":"Local Form Builder","nameJa":"ローカルフォーム作成","slug":"local-form-builder","version":"1.0.2","description":"Build forms locally, export them as portable standalone HTML files, and manage responses on the device without a cloud form service.","descriptionJa":"フォームをブラウザー内で作成し、持ち運べる単一HTMLとして書き出し、回答も端末内で管理できる完全ローカルのフォームビルダーです。","defaultLanguage":"auto","repository":{"owner":"ttomohisa","name":"htmlapps-local-form-builder"},"build":{"output":"dist/index.html","blockRuntimeNetwork":true,"selfExtract":{"enabled":true,"output":"dist/index.self-extract.html"},"sizeBudget":{"readableWarningMb":25,"selfExtractWarningMb":12}}};
-      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-11T09:09:50.0000000Z","app":{"name":"Local Form Builder","slug":"local-form-builder","version":"1.0.2"},"dependencies":[]};
+      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-11T09:24:30.0000000Z","app":{"name":"Local Form Builder","slug":"local-form-builder","version":"1.0.2"},"dependencies":[]};
       const assetBundle = {"schemaVersion":2,"dependencies":{}};
       const blobUrls = new Set();
       const assetByteCache = new Map();

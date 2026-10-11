@@ -41,12 +41,12 @@ test('ordinary confirmation has a bounded shell, fixed header, and shrinking scr
   assert.equal(body['overscroll-behavior'], 'contain');
   assert.match(body['padding-bottom'], /env\(safe-area-inset-bottom\)/);
 });
-test('mobile Quick Add reserves header and bottom navigation space with an internal scroller', () => {
+test('mobile Quick Add reserves safe viewport and bottom navigation space with an internal scroller', () => {
   const mobile = css.slice(css.indexOf('@media (max-width: 600px)'));
   const panel = rule('.quick-add-panel', mobile);
   assert.equal(panel.position, 'fixed');
   assert.equal(panel.bottom, 'calc(78px + env(safe-area-inset-bottom))');
-  assert.equal(panel['max-height'], 'calc(100dvh - var(--header-height) - 94px - env(safe-area-inset-top) - env(safe-area-inset-bottom))');
+  assert.equal(panel['max-height'], 'calc(100dvh - 94px - env(safe-area-inset-top) - env(safe-area-inset-bottom))');
   assert.equal(panel.display, 'flex');
   assert.equal(panel['flex-direction'], 'column');
   assert.equal(panel.overflow, 'hidden');
@@ -58,6 +58,17 @@ test('mobile Quick Add reserves header and bottom navigation space with an inter
   assert.equal(rule('.quick-add-scroll')['overscroll-behavior'], 'contain');
   assert.equal(rule('.quick-add-panel[hidden]').display, 'none');
   assert.equal(rule('.quick-add-panel').position, undefined, 'desktop placement remains inline');
+});
+test('short mobile picker reclaims the global-header allocation while retaining a safe top gap', () => {
+  const panel = rule('.quick-add-panel', css.slice(css.indexOf('@media (max-width: 600px)')));
+  assert.doesNotMatch(panel['max-height'], /var\(--header-height\)/, 'the picker has its own fixed heading; global header space must not reduce its list');
+  const heightBudget = panel['max-height'].match(/^calc\(100dvh - (\d+)px - env\(safe-area-inset-top\) - env\(safe-area-inset-bottom\)\)$/);
+  const bottomBudget = panel.bottom.match(/^calc\((\d+)px \+ env\(safe-area-inset-bottom\)\)$/);
+  assert.ok(heightBudget, 'declared height uses a safe-area-aware dynamic viewport budget');
+  assert.ok(bottomBudget, 'declared bottom offset retains the navigation reservation');
+  // Declaration arithmetic only: native QA still verifies actual menu/control geometry.
+  assert.equal(Number(heightBudget[1]) - Number(bottomBudget[1]), 16, '16px remains above the picker, plus the top safe area');
+  assert.equal(252 - Number(heightBudget[1]), 158, 'a 252px viewport allocates 158px to the shell before safe-area insets');
 });
 test('the working Help shrink chain and close control remain intact', () => {
   const shell = rule('#helpDialog[open]');

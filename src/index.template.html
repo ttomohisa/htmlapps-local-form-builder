@@ -516,8 +516,8 @@
       .inline-advanced-grid { grid-template-columns: 1fr; }
       .inline-editor-footer { flex-wrap: wrap; }
       .inline-required-toggle { margin-left: auto; }
-      /* Keep the picker inside the space above the persistent navigation. */
-      .quick-add-panel { position: fixed; z-index: 56; left: 10px; right: 10px; bottom: calc(78px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; max-height: calc(100dvh - var(--header-height) - 94px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow: hidden; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,.16); }
+      /* Use the safe viewport top gap, not the global header height, above the persistent navigation. */
+      .quick-add-panel { position: fixed; z-index: 56; left: 10px; right: 10px; bottom: calc(78px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; max-height: calc(100dvh - 94px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow: hidden; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,.16); }
       .quick-add-head { flex: 0 0 auto; }
       .quick-add-scroll { min-height: 0; flex: 1 1 auto; max-height: min(50dvh, 360px); }
       .quick-add-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -5,7 +5,7 @@
 ### Fixed
 - Stop background document scrolling while Builder modals are open, preserving the existing Help layout.
 - Bound ordinary replacement confirmations to the viewport and scroll their content/actions below the header.
-- Keep the mobile Add field picker above bottom navigation with a bounded, scrollable list. Desktop placement and all existing picker/recovery actions are unchanged.
+- Keep the mobile Add field picker above bottom navigation with a bounded, scrollable list. Use the safe viewport-top gap instead of reserving the global header so short windows leave enough list height. Desktop placement and all existing picker/recovery actions are unchanged.
 - Add source layout and interaction-preservation regressions to the canonical repository check.
 
 ## [1.0.1] - 2026-10-07
