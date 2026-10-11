@@ -5,7 +5,7 @@
 - **Name:** Local Form Builder
 - **Japanese name:** ローカルフォーム作成
 - **Slug:** `local-form-builder`
-- **Current version:** `1.0.1`
+- **Current version:** `1.0.2`
 - **One-sentence purpose:** Build a local-first form in the browser, configure validation, preview the real controls, and export the form itself as a portable standalone HTML file.
 - **Primary users:** People creating event sheets, inspection forms, surveys, checklists, and interview sheets for use on PCs, phones, or tablets without a cloud form service.
 - **Release artifacts:** `dist/index.html` and `dist/index.self-extract.html`
@@ -528,3 +528,13 @@ Future work should be driven by real usage rather than delaying the stable relea
 - The language button shows its target as `EN` in Japanese and `JA` in English, with matching localized title and accessible name: `英語に切り替え` / `Switch to Japanese`.
 - Header version is `v` plus the canonical `app.config.json` version; Help controls retain localized titles and accessible names.
 - Language changes preserve authored content and existing output state. Privacy remains `完全ローカル処理` / `Fully local processing`.
+
+## v1.0.2 bounded Builder overlays
+
+- While a native Builder modal is open, both the root and body prevent background scrolling. Closing it restores the normal document scroll rules without changing app state.
+- Help keeps its existing safe-area-aware shell, fixed header, and independently scrollable body.
+- The ordinary replacement confirmation has a viewport-bounded flex shell, a nonshrinking header, and a scrollable message/action body, including at 393 × 252 CSS pixels. Close, Cancel, Escape, backdrop cancellation, focus restoration, and repeat opening keep their existing behavior.
+- The startup draft decision keeps its existing geometry and mandatory Continue editing / Start new semantics; no dismissal action is added.
+- At mobile widths, Add field is a content-sized fixed picker above the bottom navigation, bounded below the header using dynamic viewport units and safe-area insets. Its heading stays visible while the list scrolls. Desktop inline placement, click/drag selection, Close, and Escape remain unchanged.
+- Native acceptance must verify short-height wheel/Tab reachability, resize/rotation, safe-area behavior, and a real on-screen keyboard. Source checks do not establish rendered fit or keyboard behavior.
+- Generated-form engine, export envelope, local persistence formats, and local-processing shield artwork remain unchanged.

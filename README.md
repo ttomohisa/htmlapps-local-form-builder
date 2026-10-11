@@ -16,6 +16,8 @@ GitHub Pages delivers the initial Builder HTML. Form design, preview, validation
 
 [![Local Form Builder screenshot](assets/screenshot-en.png)](https://ttomohisa.github.io/htmlapps-local-form-builder/)
 
+Help and replacement confirmations keep the background still while their content scrolls inside the dialog. On phones, the Add field list scrolls above the bottom navigation so choices stay reachable in short windows. The previous-draft startup choice is unchanged.
+
 ## Features
 
 - **Build practical forms visually** — Add fourteen core field types for inspections, reception sheets, surveys, checklists, and interviews.
