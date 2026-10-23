@@ -538,3 +538,10 @@ Future work should be driven by real usage rather than delaying the stable relea
 - At mobile widths, Add field is a content-sized fixed picker above the bottom navigation, bounded by a 16px viewport-top gap and safe-area insets using dynamic viewport units. Its height budget does not reserve the global app header; at 252px viewport height it allows a 158px shell before safe-area insets. Its heading stays visible while the list scrolls. Desktop inline placement, click/drag selection, Close, and Escape remain unchanged.
 - Native acceptance must verify short-height wheel/Tab reachability, resize/rotation, safe-area behavior, and a real on-screen keyboard. Source checks do not establish rendered fit or keyboard behavior.
 - Generated-form engine, export envelope, local persistence formats, and local-processing shield artwork remain unchanged.
+
+## Phone footer and Help build information
+
+- Hide only the informational page footer at the existing 600px phone layout breakpoint; preserve media controls, mobile navigation, and their spacing.
+- Keep existing canonical local-processing labels and the header version unchanged.
+- Move existing build details, with their IDs, populated values, and collapsed/expanded interaction, to the final quiet section of Help. Preserve phone availability and keyboard activation without dismissing Help.
+- Generated reports/forms and their footers are unchanged.

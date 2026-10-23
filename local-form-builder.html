@@ -582,6 +582,10 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
+    @media (max-width: 600px) { body > footer { display: none; } }
+    #helpDialog .help-build { margin-top: 18px; color: var(--muted); font-size: 11px; box-shadow: none; }
+    #helpDialog .help-build summary { padding: 10px 12px; font: inherit; }
+    #helpDialog .help-build .build-item strong { font-size: 11px; font-weight: 400; }
   </style>
 </head>
 <body class="has-mobile-bottom-bar has-mobile-page-tabs">
@@ -844,14 +848,7 @@
     </details>
     <!-- APP:END -->
 
-    <details class="build-info">
-      <summary data-i18n="buildInfo">ビルド情報</summary>
-      <div class="build-grid">
-        <div class="build-item"><span data-i18n="appVersion">アプリバージョン</span><strong id="buildVersion">—</strong></div>
-        <div class="build-item"><span data-i18n="builtAt">生成日時</span><strong id="builtAt">—</strong></div>
-        <div class="build-item"><span data-i18n="dependencies">内包依存数</span><strong id="dependencyCount">0</strong></div>
-      </div>
-    </details>
+
   </main>
 
   <nav class="app-mobile-bottom-bar" id="appMobileBottomBar" aria-label="Mobile navigation">
@@ -932,6 +929,14 @@
       </ul>
       <p class="dialog-note" data-i18n="helpOffline">このBuilder自体は単一HTMLとしてビルドされ、file:// から直接開いて使用できます。</p>
       <!-- APP:HELP:END -->
+      <details class="build-info help-build">
+      <summary data-i18n="buildInfo">ビルド情報</summary>
+      <div class="build-grid">
+        <div class="build-item"><span data-i18n="appVersion">アプリバージョン</span><strong id="buildVersion">—</strong></div>
+        <div class="build-item"><span data-i18n="builtAt">生成日時</span><strong id="builtAt">—</strong></div>
+        <div class="build-item"><span data-i18n="dependencies">内包依存数</span><strong id="dependencyCount">0</strong></div>
+      </div>
+    </details>
     </div>
   </dialog>
 
@@ -940,7 +945,7 @@
       'use strict';
 
       const APP_CONFIG = {"$schema":"./schemas/app-config.schema.json","name":"Local Form Builder","nameJa":"ローカルフォーム作成","slug":"local-form-builder","version":"1.0.2","description":"Build forms locally, export them as portable standalone HTML files, and manage responses on the device without a cloud form service.","descriptionJa":"フォームをブラウザー内で作成し、持ち運べる単一HTMLとして書き出し、回答も端末内で管理できる完全ローカルのフォームビルダーです。","defaultLanguage":"auto","repository":{"owner":"ttomohisa","name":"htmlapps-local-form-builder"},"build":{"output":"dist/index.html","blockRuntimeNetwork":true,"selfExtract":{"enabled":true,"output":"dist/index.self-extract.html"},"sizeBudget":{"readableWarningMb":25,"selfExtractWarningMb":12}}};
-      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-11T22:21:04.1819362Z","app":{"name":"Local Form Builder","slug":"local-form-builder","version":"1.0.2"},"dependencies":[]};
+      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-23T11:04:05.1222409Z","app":{"name":"Local Form Builder","slug":"local-form-builder","version":"1.0.2"},"dependencies":[]};
       const assetBundle = {"schemaVersion":2,"dependencies":{}};
       const blobUrls = new Set();
       const assetByteCache = new Map();
@@ -2711,6 +2716,7 @@
       $('#helpButton').addEventListener('click', () => helpDialog.showModal());
       $('#closeHelpButton').addEventListener('click', () => helpDialog.close());
       helpDialog.addEventListener('click', event => {
+        if (event.target !== helpDialog) return;
         const rect = helpDialog.getBoundingClientRect();
         if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) helpDialog.close();
       });
