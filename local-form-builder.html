@@ -86,7 +86,7 @@
       border-radius: 999px;
       color: var(--muted);
       background: #f0f0ed;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 650;
       vertical-align: 2px;
     }
@@ -126,6 +126,8 @@
       cursor: pointer;
       transition: border-color .16s ease, background .16s ease, transform .16s ease;
     }
+    .dialog-close { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 9px; background: transparent; cursor: pointer; }
+    .dialog-close svg { width: 18px; height: 18px; }
     .icon-button:hover { border-color: var(--line-strong); background: var(--surface-hover); }
     .icon-button:active { transform: translateY(1px); }
     .icon-button svg { width: 18px; height: 18px; display: block; }
@@ -147,8 +149,8 @@
     .intro { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
     .intro-copy { min-width: 0; }
     .intro p { max-width: 880px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
-    .local-badge { display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--brand) 20%, var(--line)); border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-size: 11px; font-weight: 780; }
-    .local-badge svg { width: 17px; height: 17px; }
+    .local-badge { display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; margin-top: 3px; padding: 7px 0; border: 0; border-radius: 0; background: transparent; color: var(--brand); font-size: 12px; font-weight: 500; white-space: nowrap; }
+    .local-badge svg { width: 15px; height: 15px; }
 
     .builder-grid { display: grid; grid-template-columns: minmax(190px, .68fr) minmax(430px, 1.65fr) minmax(280px, .95fr); gap: 14px; align-items: start; }
     .panel { min-width: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); overflow: hidden; }
@@ -414,7 +416,7 @@
     .build-item span { display: block; color: var(--muted); font-size: 9px; }
     .build-item strong { display: block; margin-top: 3px; font-size: 11px; overflow-wrap: anywhere; }
 
-    footer { width: min(1480px, calc(100% - 32px)); margin: 0 auto; padding: 0 0 30px; color: var(--muted); font-size: 10px; text-align: center; }
+    footer { width: min(1480px, calc(100% - 32px)); margin: 0 auto; padding: 0 0 30px; color: var(--muted); font-size: 12px; text-align: left; }
     .sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
 
     .app-toast {
@@ -863,7 +865,7 @@
     </button>
   </nav>
 
-  <footer><span id="footerName">Local Form Builder</span> · MIT License · <span data-i18n="footer">完全内包HTMLとして生成</span></footer>
+  <footer><span id="footerName">Local Form Builder</span> · MIT License · <span data-i18n="footer">フォームの作成はブラウザー内で完結</span></footer>
 
   <div class="app-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true" data-tone="default">
     <span class="app-toast-message" id="appToastMessage"></span>
@@ -903,9 +905,7 @@
   <dialog id="helpDialog" aria-labelledby="helpTitle">
     <div class="dialog-header">
       <h2 id="helpTitle" data-i18n="helpTitle">使い方と注意事項</h2>
-      <button class="icon-button" id="closeHelpButton" type="button" data-i18n-title="close" data-i18n-aria-label="close" title="閉じる" aria-label="閉じる">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>
-      </button>
+      <button class="dialog-close" id="closeHelpButton" type="button" data-i18n-title="close" data-i18n-aria-label="close" title="閉じる" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12"/><path d="M18 6 6 18"/></svg></button>
     </div>
     <div class="dialog-body">
       <!-- APP:HELP:BEGIN Local Form Builder v1.0.2 help. -->
@@ -945,7 +945,7 @@
       'use strict';
 
       const APP_CONFIG = {"$schema":"./schemas/app-config.schema.json","name":"Local Form Builder","nameJa":"ローカルフォーム作成","slug":"local-form-builder","version":"1.0.2","description":"Build forms locally, export them as portable standalone HTML files, and manage responses on the device without a cloud form service.","descriptionJa":"フォームをブラウザー内で作成し、持ち運べる単一HTMLとして書き出し、回答も端末内で管理できる完全ローカルのフォームビルダーです。","defaultLanguage":"auto","repository":{"owner":"ttomohisa","name":"htmlapps-local-form-builder"},"build":{"output":"dist/index.html","blockRuntimeNetwork":true,"selfExtract":{"enabled":true,"output":"dist/index.self-extract.html"},"sizeBudget":{"readableWarningMb":25,"selfExtractWarningMb":12}}};
-      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-23T11:04:05.1222409Z","app":{"name":"Local Form Builder","slug":"local-form-builder","version":"1.0.2"},"dependencies":[]};
+      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-11-13T23:27:45.4220797Z","app":{"name":"Local Form Builder","slug":"local-form-builder","version":"1.0.2"},"dependencies":[]};
       const assetBundle = {"schemaVersion":2,"dependencies":{}};
       const blobUrls = new Set();
       const assetByteCache = new Map();
@@ -1035,7 +1035,7 @@
           settingsTitle: '設定', settingsBody: 'フォーム全体と書き出しを設定します。項目はフォーム上で直接編集します。', formSettings: 'フォーム設定', formTitle: 'フォーム名', formDescription: '説明', inputMode: '入力モード', inputModeNormal: '通常', inputModeNormalHelp: '保存後に完了画面を表示し、次の回答または回答履歴へ進めます。', inputModeContinuous: '連続入力', inputModeContinuousHelp: '受付・アンケート向け。保存後にフォームへ自動で戻ります。', fieldSettings: '選択項目', inspectorEmpty: 'フォーム上の項目を選ぶと、ここで内容を編集できます。',
           fieldLabel: 'ラベル / 内容', fieldContent: '内容', fieldType: '項目の種類', advancedSettings: '詳細設定', helperText: '補足', placeholder: 'プレースホルダー', choiceOptions: '選択肢', addChoice: '選択肢を追加', defaultValue: '初期値', noDefault: '未選択', clearSelection: '選択を解除', required: '必須にする', duplicateField: '複製', deleteField: '項目を削除',
           emptyTitle: 'まだ項目がありません', emptyBody: '項目を追加すると、ここにフォームの内容が表示されます。', editFormSettings: 'フォーム設定を編集',
-          mobileForm: 'フォーム', mobileFields: '項目', mobileSettings: '設定', schemaTitle: 'フォーム構造（開発確認）', buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数', footer: '完全内包HTMLとして生成',
+          mobileForm: 'フォーム', mobileFields: '項目', mobileSettings: '設定', schemaTitle: 'フォーム構造（開発確認）', buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数', footer: 'フォームの作成はブラウザー内で完結',
           helpBasicsTitle: '基本操作', helpStep1: '「項目を追加」からクリックで末尾へ追加するか、項目をフォーム内の好きな位置へドラッグして挿入します。', helpStep2: 'フォーム上の項目を選択すると、その場で質問文・種類・選択肢・必須設定を編集できます。初期値や入力チェックは「詳細設定」から編集します。', helpStep3: '「プレビュー」で入力チェックを確認し、「HTMLを書き出す」から独立して動くフォームHTMLを保存できます。項目の複製・並べ替え・削除Undoも利用できます。',
           helpMobileTitle: 'スマートフォン', helpMobileBody: "画面下部の「フォーム」「項目」「設定」で作業画面を切り替えます。ドラッグ操作を使わなくてもすべての操作ができます。",
            helpPrivacyTitle: 'プライバシー', helpPrivacyBody: '入力したフォーム内容はこのページ内だけで処理され、このアプリから外部サーバーへ送信されません。実行時の外部通信も行いません。', helpNotesTitle: 'このバージョンについて', helpNoteMemory: 'Builderの編集中フォームは、利用可能な場合、この端末へ自動保存します。起動時に前回の続きから再開できます。', helpNoteFuture: "テンプレートからフォームを作成でき、以前書き出したLocal Form BuilderのHTMLを読み込んで再編集できます。回答履歴、CSV / JSON、印刷も利用できます。",  helpOffline: 'このBuilder自体は単一HTMLとしてビルドされ、file:// から直接開いて使用できます。',
@@ -1060,7 +1060,7 @@
           settingsTitle: 'Settings', settingsBody: 'Configure the form and export. Edit fields directly on the form.', formSettings: 'Form settings', formTitle: 'Form title', formDescription: 'Description', inputMode: 'Entry mode', inputModeNormal: 'Normal', inputModeNormalHelp: 'After saving, show a completion screen with Next response and Response history actions.', inputModeContinuous: 'Continuous entry', inputModeContinuousHelp: 'For reception desks and surveys. Return to a fresh form automatically after saving.', fieldSettings: 'Selected field', inspectorEmpty: 'Select a field on the form to edit it here.',
           fieldLabel: 'Label / content', fieldContent: 'Content', fieldType: 'Field type', advancedSettings: 'Advanced settings', helperText: 'Helper text', placeholder: 'Placeholder', choiceOptions: 'Choices', addChoice: 'Add choice', defaultValue: 'Default value', noDefault: 'No default', clearSelection: 'Clear selection', required: 'Required', duplicateField: 'Duplicate', deleteField: 'Delete field',
           emptyTitle: 'No fields yet', emptyBody: 'Add a field and it will appear here.', editFormSettings: 'Edit form settings',
-          mobileForm: 'Form', mobileFields: 'Fields', mobileSettings: 'Settings', schemaTitle: 'Form schema (development check)', buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies', footer: 'Generated as one self-contained HTML file',
+          mobileForm: 'Form', mobileFields: 'Fields', mobileSettings: 'Settings', schemaTitle: 'Form schema (development check)', buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies', footer: 'Form building stays in the browser',
           helpBasicsTitle: 'Basics', helpStep1: 'Use Add field to append with a click, or drag a field into any position in the form.', helpStep2: 'Select a field on the form to edit its question text, type, choices, and Required setting in place. Default values and validation are available under Advanced settings.', helpStep3: 'Use Preview to exercise validation, then use Export HTML to save a form that runs independently. Duplicate, reorder, and deletion Undo remain available in Edit mode.',
           helpMobileTitle: 'Smartphones', helpMobileBody: "Use Form, Fields, and Settings in the bottom bar to switch work areas. Every operation is available without drag-and-drop.",
            helpPrivacyTitle: 'Privacy', helpPrivacyBody: 'Your form content is processed only inside this page and is not sent to an external server by this app. The app performs no runtime network requests.', helpNotesTitle: 'About this version', helpNoteMemory: 'When browser storage is available, the Builder automatically saves the form being edited on this device and can resume it on the next launch.', helpNoteFuture: "Create a form from a template, or reopen a previously exported Local Form Builder HTML to edit it. Response history, CSV / JSON, and printing are also available.",  helpOffline: 'The Builder itself is built as a single HTML file and can be opened directly with file://.',
